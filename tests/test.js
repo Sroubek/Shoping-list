@@ -1,10 +1,10 @@
 /*eslint no-undef: "error"*/
+/*global describe*/
+/*global test*/
 /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 /*eslint-env node*/
 const request = require('supertest');
-const express = require('express');
 const app =  require('../app.js');
-
 describe('POST /items', function() {
 	test('respond with json', function(done) {
 		request(app)
@@ -12,7 +12,7 @@ describe('POST /items', function() {
 			.field({ 'id':'4', 'name':'Cofee', 'quantity':10, 'unit':'ml' })
 			.set('Accept', 'application/json')
 			.expect(201)
-			.end(function(err, res) {
+			.end(function(err) {
 				if (err) return done(err);
 				done();
 			});
@@ -25,7 +25,7 @@ describe('GET /items', function() {
 			.get('/items/')
 			.set('Accept', 'application/json')
 			.expect(200)
-			.end(function(err, res) {
+			.end(function(err) {
 				if (err) return done(err);
 				done();
 			});
@@ -52,7 +52,7 @@ describe('GET /items/4', function() {
 			.get('/items/4')
 			.set('Accept', 'application/json')
 			.expect(404, 'item not found')
-			.end(function(err, res) {
+			.end(function(err) {
 				if (err) return done(err);
 				done();
 			});
@@ -65,7 +65,7 @@ describe('DELETE /items/1', function() {
 			.delete('/items/1')
 			.set('Accept', 'application/json')
 			.expect(204)
-			.end(function(err, res) {
+			.end(function(err) {
 				if (err) return done(err);
 				done();
 			});
@@ -78,7 +78,7 @@ describe('DELETE /items/4', function() {
 			.delete('/items/4')
 			.set('Accept', 'application/json')
 			.expect(404, 'item not found')
-			.end(function(err, res) {
+			.end(function(err) {
 				if (err) return done(err);
 				done();
 			});
@@ -87,11 +87,11 @@ describe('DELETE /items/4', function() {
 
 describe('DELETE /items/', function() {
 	test('DELETE item/returns 204 and delte all item', function(done) {
-    request(app)
+		request(app)
 			.delete('/items')
 			.set('Accept', 'application/json')
 			.expect(204)
-			.end(function(err, res) {
+			.end(function(err) {
 				if (err) return done(err);
 				done();
 			});
