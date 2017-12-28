@@ -10,7 +10,7 @@ const alasql = require('alasql');
 
 app.use(express.static('public'));
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4002;
 
 alasql('CREATE TABLE items (id int, name varchar(255), quantity int, unit varchar(25))');
 
@@ -74,3 +74,4 @@ app.delete('/items/', (req, res, next) => {
 app.listen(PORT, () => {
 	// Port listen to Port 4001
 });
+module.exports = app;

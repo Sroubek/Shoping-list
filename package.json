@@ -4,7 +4,7 @@
   "description": "shoping-list",
   "main": "app.js",
   "scripts": {
-    "test": "jest ./test/test.js",
+    "test": "jest ./tests/test.js",
     "lint": "eslint ./app.js",
     "dev": "nodemon ./app.js",
     "start": "node ./app.js"
