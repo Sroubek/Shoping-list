@@ -5,13 +5,67 @@
 /*eslint-env node*/
 const request = require('supertest');
 const app =  require('../app.js');
+
 describe('POST /items', function() {
-	test('respond with json', function(done) {
+	test('POST /items respond with json', function(done) {
 		request(app)
 			.post('/items/')
-			.field({ 'id':'4', 'name':'Cofee', 'quantity':10, 'unit':'ml' })
+			.send({'id':1, 'name':'Cofee', 'quantity':10, 'unit':'ml'})
+			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
 			.expect(201)
+			.expect('{"id":1,"name":"Cofee","quantity":10,"unit":"ml"}')
+			.expect('Content-Type',/json/)
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+	test('POST /items respond with json second test with different data', function(done) {
+		request(app)
+			.post('/items/')
+			.send({'id':2, 'name':'Bread', 'quantity':1, 'unit':'Kg'})
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.expect(201)
+			.expect('{"id":2,"name":"Bread","quantity":1,"unit":"Kg"}')
+			.expect('Content-Type',/json/)
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+	test('ID is NaN', function(done) {
+		request(app)
+			.post('/items/')
+			.send({ 'id':'NaN', 'name':'Cofee', 'quantity':10, 'unit':'ml' })
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.expect(400)
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+	test('quantity is NaN', function(done) {
+		request(app)
+			.post('/items/')
+			.send({ 'id':5, 'name':'Cofee', 'quantity':'NaN', 'unit':'ml' })
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.expect(400)
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+	test('ID and quantity are NaN', function(done) {
+		request(app)
+			.post('/items/')
+			.send({ 'id':'NaN', 'name':'Cofee', 'quantity':'NaN', 'unit':'ml' })
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.expect(400)
 			.end(function(err) {
 				if (err) return done(err);
 				done();
@@ -24,7 +78,18 @@ describe('GET /items', function() {
 		request(app)
 			.get('/items/')
 			.set('Accept', 'application/json')
-			.expect(200)
+			.expect(200, [{
+				id: 1,
+				name: 'Cofee',
+				quantity: 10,
+				unit: 'ml'
+			},{
+				id: 2,
+				name: 'Bread',
+				quantity: 1,
+				unit: 'Kg'
+			}])
+			.expect('Content-Type',/json/)
 			.end(function(err) {
 				if (err) return done(err);
 				done();
@@ -32,21 +97,23 @@ describe('GET /items', function() {
 	});
 });
 
-describe('GET /items/1', function() {
+describe('GET /items/itemId', function() {
 	test('GET /items/1 call item with id 1', function(done) {
 		request(app)
 			.get('/items/1')
 			.set('Accept', 'application/json')
 			.expect(200, [{
 				id: 1,
-				name: 'Bread',
-				quantity: 1,
-				unit: 'Kg'
-			}], done);
+				name: 'Cofee',
+				quantity: 10,
+				unit: 'ml'
+			}])
+			.expect('Content-Type',/json/)
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
 	});
-});
-
-describe('GET /items/4', function() {
 	test('GET item/4 returns 404 item not found', function(done) {
 		request(app)
 			.get('/items/4')
@@ -57,9 +124,19 @@ describe('GET /items/4', function() {
 				done();
 			});
 	});
+	test('GET item/NaN returns 400 Invalid input NaN is not a number!', function(done) {
+		request(app)
+			.get('/items/NaN')
+			.set('Accept', 'application/json')
+			.expect(400, 'Invalid input NaN is not a number!')
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
 });
 
-describe('DELETE /items/1', function() {
+describe('DELETE /items/:itemId', function() {
 	test('DELETE item/1 returns 204 and deltes item', function(done) {
 		request(app)
 			.delete('/items/1')
@@ -70,14 +147,21 @@ describe('DELETE /items/1', function() {
 				done();
 			});
 	});
-});
-
-describe('DELETE /items/4', function() {
 	test('DELETE item/4 returns 404 item not found', function(done) {
 		request(app)
 			.delete('/items/4')
 			.set('Accept', 'application/json')
 			.expect(404, 'item not found')
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+	test('DELETE item/NaN returns 400 Invalid input NaN is not a number!', function(done) {
+		request(app)
+			.delete('/items/NaN')
+			.set('Accept', 'application/json')
+			.expect(400, 'Invalid input NaN is not a number!')
 			.end(function(err) {
 				if (err) return done(err);
 				done();

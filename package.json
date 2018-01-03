@@ -28,6 +28,8 @@
   "dependencies": {
     "alasql": "^0.4.4",
     "body-parser": "^1.18.2",
+    "config": "^1.29.0",
+    "espress": "0.0.0",
     "express": "^4.16.2",
     "morgan": "^1.9.0"
   }
