@@ -11,12 +11,12 @@ require('../item_db.js');
 // Add your code here:
 router.param('itemId', (req, res, next, id) => {
 	const itemId = Number(id);
-	const item = alasql('SELECT * FROM items WHERE id='+ itemId);
-	const itemIndex = item.findIndex(item => item.id === itemId);
 	if ( isNaN(itemId)){
 		const NanId = id;
 		return res.status(400).send('Invalid input ' + NanId + ' is not a number!');
 	}
+	const item = alasql('SELECT * FROM items WHERE id=?', itemId);
+	const itemIndex = item.findIndex(item => item.id === itemId);
 	if (itemIndex === -1) {
 		return res.status(404).send('item not found');
 	} else {
@@ -34,7 +34,7 @@ router.get('/items/', (req, res, next) => {
 
 // Get a single Item
 router.get('/items/:itemId', (req, res, next) => {
-	const item = alasql('SELECT * FROM items WHERE id='+ req.itemId);
+	const item = alasql('SELECT * FROM items WHERE id= ?', req.itemId);
 	res.send(item);
 	next();
 });
@@ -45,14 +45,14 @@ router.post('/items/', (req, res, next) => {
 	if ( isNaN(newItem.id) || isNaN(newItem.quantity) ){
 		return res.status(400).send('Invalid input');
 	}
-	alasql('SELECT * INTO items FROM ?',[[newItem]]);
+	alasql('INSERT INTO items SELECT * FROM ?',[[newItem]]);
 	res.status(201).send(newItem);
 	next();
 });
 
 // Delete an Item
 router.delete('/items/:itemId', (req, res, next) => {
-	alasql('DELETE FROM items WHERE id='+ req.itemId);
+	alasql('DELETE FROM items WHERE id=?', req.itemId);
 	res.status(204).send();
 	next();
 });
