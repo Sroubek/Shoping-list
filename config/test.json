@@ -1,0 +1,9 @@
+{
+"Test": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": 9000,
+      "dbName": "items"
+    }
+  }
+}
