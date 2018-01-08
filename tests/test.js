@@ -10,11 +10,11 @@ describe('POST /items', function() {
 	test('POST /items respond with json', function(done) {
 		request(app)
 			.post('/items/')
-			.send({'id':1, 'name':'Cofee', 'quantity':10, 'unit':'ml'})
+			.send({'name':'Cofee', 'quantity':10, 'unit':'ml'})
 			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
 			.expect(201)
-			.expect('{"id":1,"name":"Cofee","quantity":10,"unit":"ml"}')
+			.expect('{"name":"Cofee","quantity":10,"unit":"ml"}')
 			.expect('Content-Type',/json/)
 			.end(function(err) {
 				if (err) return done(err);
@@ -24,24 +24,12 @@ describe('POST /items', function() {
 	test('POST /items respond with json second test with different data', function(done) {
 		request(app)
 			.post('/items/')
-			.send({'id':2, 'name':'Bread', 'quantity':1, 'unit':'Kg'})
+			.send({'name':'Bread', 'quantity':1, 'unit':'Kg'})
 			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
 			.expect(201)
-			.expect('{"id":2,"name":"Bread","quantity":1,"unit":"Kg"}')
+			.expect('{"name":"Bread","quantity":1,"unit":"Kg"}')
 			.expect('Content-Type',/json/)
-			.end(function(err) {
-				if (err) return done(err);
-				done();
-			});
-	});
-	test('ID is NaN', function(done) {
-		request(app)
-			.post('/items/')
-			.send({ 'id':'NaN', 'name':'Cofee', 'quantity':10, 'unit':'ml' })
-			.set('Content-Type', 'application/json')
-			.set('Accept', 'application/json')
-			.expect(400)
 			.end(function(err) {
 				if (err) return done(err);
 				done();
@@ -50,19 +38,7 @@ describe('POST /items', function() {
 	test('quantity is NaN', function(done) {
 		request(app)
 			.post('/items/')
-			.send({ 'id':5, 'name':'Cofee', 'quantity':'NaN', 'unit':'ml' })
-			.set('Content-Type', 'application/json')
-			.set('Accept', 'application/json')
-			.expect(400)
-			.end(function(err) {
-				if (err) return done(err);
-				done();
-			});
-	});
-	test('ID and quantity are NaN', function(done) {
-		request(app)
-			.post('/items/')
-			.send({ 'id':'NaN', 'name':'Cofee', 'quantity':'NaN', 'unit':'ml' })
+			.send({'name':'Cofee', 'quantity':'NaN', 'unit':'ml' })
 			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
 			.expect(400)
@@ -79,12 +55,12 @@ describe('GET /items', function() {
 			.get('/items/')
 			.set('Accept', 'application/json')
 			.expect(200, [{
-				id: 1,
+				itemId: 1,
 				name: 'Cofee',
 				quantity: 10,
 				unit: 'ml'
 			},{
-				id: 2,
+				itemId: 2,
 				name: 'Bread',
 				quantity: 1,
 				unit: 'Kg'
@@ -103,7 +79,7 @@ describe('GET /items/itemId', function() {
 			.get('/items/1')
 			.set('Accept', 'application/json')
 			.expect(200, [{
-				id: 1,
+				itemId: 1,
 				name: 'Cofee',
 				quantity: 10,
 				unit: 'ml'
