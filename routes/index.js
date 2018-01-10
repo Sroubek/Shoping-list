@@ -28,7 +28,7 @@ passport.use(new JsonStrategy(
 				return cb(true, null);
 			}
 
-			return cb(false, user);
+			return cb(null, user);
 		});
 	}));
 
