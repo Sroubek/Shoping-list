@@ -10,11 +10,11 @@ describe('POST /items', function() {
 	test('POST /items respond with json', function(done) {
 		request(app)
 			.post('/items/')
-			.send({'name':'Cofee', 'quantity':10, 'unit':'ml'})
+			.send({'userId':1,'name':'Cofee', 'quantity':10, 'unit':'ml'})
 			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
 			.expect(201)
-			.expect('{"name":"Cofee","quantity":10,"unit":"ml"}')
+			.expect('{"userId":1,"name":"Cofee","quantity":10,"unit":"ml"}')
 			.expect('Content-Type',/json/)
 			.end(function(err) {
 				if (err) return done(err);
@@ -24,11 +24,11 @@ describe('POST /items', function() {
 	test('POST /items respond with json second test with different data', function(done) {
 		request(app)
 			.post('/items/')
-			.send({'name':'Bread', 'quantity':1, 'unit':'Kg'})
+			.send({'userId':1,'name':'Bread', 'quantity':1, 'unit':'Kg'})
 			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
 			.expect(201)
-			.expect('{"name":"Bread","quantity":1,"unit":"Kg"}')
+			.expect('{"userId":1,"name":"Bread","quantity":1,"unit":"Kg"}')
 			.expect('Content-Type',/json/)
 			.end(function(err) {
 				if (err) return done(err);
@@ -49,6 +49,23 @@ describe('POST /items', function() {
 	});
 });
 
+describe('POST /login/', function() {
+	test('POST /login/ respond with json', function(done) {
+		request(app)
+			.post('/login/')
+			.send({'username':'Screwee','password':'Password01'})
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.expect(200)
+			.expect('Hello user Screwee')
+			.expect('Content-Type',/json/)
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+});
+
 describe('GET /items', function() {
 	test('GET respond with json', function(done) {
 		request(app)
@@ -56,11 +73,13 @@ describe('GET /items', function() {
 			.set('Accept', 'application/json')
 			.expect(200, [{
 				itemId: 1,
+				userId: 1,
 				name: 'Cofee',
 				quantity: 10,
 				unit: 'ml'
 			},{
 				itemId: 2,
+				userId: 1,
 				name: 'Bread',
 				quantity: 1,
 				unit: 'Kg'
@@ -80,6 +99,7 @@ describe('GET /items/itemId', function() {
 			.set('Accept', 'application/json')
 			.expect(200, [{
 				itemId: 1,
+				userId: 1,
 				name: 'Cofee',
 				quantity: 10,
 				unit: 'ml'

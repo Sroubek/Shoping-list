@@ -8,7 +8,6 @@ const app = express();
 const config = require('config');
 const dbConfig = config.get('Item.dbConfig');
 const bodyParser = require('body-parser');
-
 // ----- configuration -----
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -19,3 +18,6 @@ app.use('/', require('./routes/'));
 
 // ----- launch -----
 app.listen(dbConfig);
+
+// ----- Exporting -----
+module.exports = app;
