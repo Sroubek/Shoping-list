@@ -28,7 +28,7 @@ describe('POST /items', function() {
 			.send({'userId':1,'name':'Bread', 'quantity':1, 'unit':'Kg'})
 			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
-			.expect(201)
+			.expect(209)
 			.expect('{"userId":1,"name":"Bread","quantity":1,"unit":"Kg"}')
 			.expect('Content-Type',/json/)
 			.end(function(err) {

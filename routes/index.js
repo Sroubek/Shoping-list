@@ -92,7 +92,7 @@ router.delete('/items/:itemId', isLoggedIn, (req, res, next) => {
 
 // ----- Delete all Items -----
 router.delete('/items/', isLoggedIn, (req, res, next) => {
-	alasql('DELETE FROM items WHERE userId=?', req.user.id);
+	    alasql('DELETE FROM items WHERE userId=?', req.user.id);
 	res.status(204).send();
 	next();
 });
