@@ -8,10 +8,14 @@ const app = express();
 const config = require('config');
 const dbConfig = config.get('Item.dbConfig');
 const bodyParser = require('body-parser');
+const bunyan = require('bunyan');
 // ----- configuration -----
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
+var log = bunyan.createLogger({name: 'app'});
+
+log.info('hi');
 
 // ----- routes -----
 app.use('/', require('./routes/'));
