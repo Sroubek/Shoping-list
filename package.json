@@ -22,7 +22,8 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
-    "jest": "^22.0.6",
+    "git-hooks": "^1.1.9",
+    "jest": "^22.0.4",
     "nodemon": "^1.14.7",
     "supertest": "^3.0.0"
   },
@@ -30,14 +31,11 @@
     "alasql": "^0.4.4",
     "body-parser": "^1.18.2",
     "config": "^1.29.0",
-    "connect-ensure-login": "^0.1.1",
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.4.3",
-    "espress": "0.0.0",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
-    "passport-json": "^1.2.0"
+    "passport-json": "^1.2.0",
+    "superagent": "^3.8.2"
   }
 }

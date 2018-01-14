@@ -5,6 +5,7 @@
 /*eslint-env node*/
 const request = require('supertest');
 const app =  require('../app.js');
+var cookie;
 
 describe('POST /items', function() {
 	test('POST /items respond with json', function(done) {
@@ -58,9 +59,9 @@ describe('POST /login/', function() {
 			.set('Accept', 'application/json')
 			.expect(200)
 			.expect('Hello user Screwee')
-			.expect('Content-Type',/json/)
-			.end(function(err) {
+			.end(function(err,res) {
 				if (err) return done(err);
+				cookie = res.headers['set-cookie'];
 				done();
 			});
 	});
@@ -71,6 +72,7 @@ describe('GET /items', function() {
 		request(app)
 			.get('/items/')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(200, [{
 				itemId: 1,
 				userId: 1,
@@ -97,6 +99,7 @@ describe('GET /items/itemId', function() {
 		request(app)
 			.get('/items/1')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(200, [{
 				itemId: 1,
 				userId: 1,
@@ -114,6 +117,7 @@ describe('GET /items/itemId', function() {
 		request(app)
 			.get('/items/4')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(404, 'item not found')
 			.end(function(err) {
 				if (err) return done(err);
@@ -124,6 +128,7 @@ describe('GET /items/itemId', function() {
 		request(app)
 			.get('/items/NaN')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(400, 'Invalid input NaN is not a number!')
 			.end(function(err) {
 				if (err) return done(err);
@@ -137,6 +142,7 @@ describe('DELETE /items/:itemId', function() {
 		request(app)
 			.delete('/items/1')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(204)
 			.end(function(err) {
 				if (err) return done(err);
@@ -147,6 +153,7 @@ describe('DELETE /items/:itemId', function() {
 		request(app)
 			.delete('/items/4')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(404, 'item not found')
 			.end(function(err) {
 				if (err) return done(err);
@@ -157,6 +164,7 @@ describe('DELETE /items/:itemId', function() {
 		request(app)
 			.delete('/items/NaN')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(400, 'Invalid input NaN is not a number!')
 			.end(function(err) {
 				if (err) return done(err);
@@ -170,6 +178,7 @@ describe('DELETE /items/', function() {
 		request(app)
 			.delete('/items')
 			.set('Accept', 'application/json')
+			.set('cookie', cookie)
 			.expect(204)
 			.end(function(err) {
 				if (err) return done(err);
