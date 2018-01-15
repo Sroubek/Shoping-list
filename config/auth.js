@@ -1,7 +1,4 @@
-/*eslint no-undef: "error"*/
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 /*eslint-env node*/
-// ------ set up ------
 const db = require('../item_db.js');
 const passport = require('passport');
 const JsonStrategy = require('passport-json').Strategy;
@@ -31,4 +28,5 @@ passport.use(new JsonStrategy(
 			return cb(null, user);
 		});
 	}));
+
 module.exports = passport;

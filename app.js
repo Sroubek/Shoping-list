@@ -1,26 +1,21 @@
-/*eslint no-undef: "error"*/
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 /*eslint-env node*/
 
-// ------ set up ------
 const express = require('express');
 const app = express();
-const config = require('config');
-const dbConfig = config.get('Item.dbConfig');
 const bodyParser = require('body-parser');
-const bunyan = require('bunyan');
-// ----- configuration -----
+const passport = require('passport');
+const session = require('express-session');
+
+app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(require('morgan')('combined'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
-const log = bunyan.createLogger({name: 'app'});
-// ----- routes -----
-app.use('/', require('./routes/'));
 
-// ----- launch -----
-app.listen(dbConfig, () => {
-	log.info('App is listening to the Port 4002');
-});
+app.use('/', require('./routes/items.js'));
+app.use('/', require('./routes/profile.js'));
+app.use('/', require('./routes/authentication.js'));
 
-// ----- Exporting -----
 module.exports = app;

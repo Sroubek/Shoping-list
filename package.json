@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest ./tests/ NODE_ENV=test jest --verbose --maxWorkers=5 --forceExit",
     "lint": "eslint ./",
-    "dev": "nodemon ./app.js",
-    "start": "node ./app.js"
+    "dev": "nodemon ./server.js",
+    "start": "node ./server.js"
   },
   "pre-commit": [
     "lint",
@@ -40,7 +40,6 @@
     "express-session": "^1.15.6",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
-    "passport-json": "^1.2.0",
-    "superagent": "^3.8.2"
+    "passport-json": "^1.2.0"
   }
 }
