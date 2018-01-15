@@ -13,15 +13,14 @@ const bunyan = require('bunyan');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
-var log = bunyan.createLogger({name: 'app'});
-
-log.info('hi');
-
+const log = bunyan.createLogger({name: 'app'});
 // ----- routes -----
 app.use('/', require('./routes/'));
 
 // ----- launch -----
-app.listen(dbConfig);
+app.listen(dbConfig, () => {
+	log.info('App is listening to the Port 4002');
+});
 
 // ----- Exporting -----
 module.exports = app;

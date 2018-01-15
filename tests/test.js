@@ -186,3 +186,68 @@ describe('DELETE /items/', function() {
 			});
 	});
 });
+
+describe('User is not logged in', function() {
+	test('GET /items', function(done) {
+		request(app)
+			.get('/items')
+			.set('Accept', 'application/json')
+			.expect(403, 'You are not logged in')
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+	test('DELETE /items/', function(done) {
+		request(app)
+			.delete('/items')
+			.set('Accept', 'application/json')
+			.expect(403, 'You are not logged in')
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+});
+
+describe('GET /profile/', function() {
+	test('GET /profile/ returns users Information', function(done) {
+		request(app)
+			.get('/profile/')
+			.set('Accept', 'application/json')
+			.set('cookie', cookie)
+			.expect(200, [{
+				id: 1,
+				username: 'Screwee'
+			}])
+			.expect('Content-Type',/json/)
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+});
+describe('GET /logout/', function() {
+	test('GET /logout/ logout user from session', function(done) {
+		request(app)
+			.get('/logout/')
+			.set('Accept', 'application/json')
+			.set('cookie', cookie)
+			.expect(200, 'User logged out')
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+	test('GET /profile/ returns that user is not logged in', function(done) {
+		request(app)
+			.get('/profile/')
+			.set('Accept', 'application/json')
+			.set('cookie', cookie)
+			.expect(403, 'You are not logged in')
+			.end(function(err) {
+				if (err) return done(err);
+				done();
+			});
+	});
+});
