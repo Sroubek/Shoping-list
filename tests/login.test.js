@@ -23,6 +23,14 @@ describe('POST /login/', function() {
 });
 
 describe('GET /profile/', function() {
+	request(app)
+		.post('/login/')
+		.send({'username':'Screwee','password':'Password01'})
+		.set('Content-Type', 'application/json')
+		.set('Accept', 'application/json')
+		.end(function(err,res) {
+			cookie = res.headers['set-cookie'];
+		});
 	test('GET /profile/ returns users Information', function(done) {
 		request(app)
 			.get('/profile/')

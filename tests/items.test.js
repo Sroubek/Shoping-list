@@ -5,23 +5,6 @@ const app = require('../app.js');
 const request = require('supertest');
 var cookie;
 
-describe('POST /login/', function() {
-	test('POST /login/ respond with json', function(done) {
-		request(app)
-			.post('/login/')
-			.send({'username':'Screwee','password':'Password01'})
-			.set('Content-Type', 'application/json')
-			.set('Accept', 'application/json')
-			.expect(200)
-			.expect('Hello user Screwee')
-			.end(function(err,res) {
-				if (err) return done(err);
-				cookie = res.headers['set-cookie'];
-				done();
-			});
-	});
-});
-
 describe('POST /items', function() {
 	test('POST /items respond with json', function(done) {
 		request(app)
@@ -67,6 +50,14 @@ describe('POST /items', function() {
 
 
 describe('GET /items', function() {
+	request(app)
+		.post('/login/')
+		.send({'username':'Screwee','password':'Password01'})
+		.set('Content-Type', 'application/json')
+		.set('Accept', 'application/json')
+		.end(function(err,res) {
+			cookie = res.headers['set-cookie'];
+		});
 	test('GET respond with json', function(done) {
 		request(app)
 			.get('/items/')
@@ -94,6 +85,14 @@ describe('GET /items', function() {
 });
 
 describe('GET /items/itemId', function() {
+	request(app)
+		.post('/login/')
+		.send({'username':'Screwee','password':'Password01'})
+		.set('Content-Type', 'application/json')
+		.set('Accept', 'application/json')
+		.end(function(err,res) {
+			cookie = res.headers['set-cookie'];
+		});
 	test('GET /items/1 call item with id 1', function(done) {
 		request(app)
 			.get('/items/1')
@@ -137,6 +136,14 @@ describe('GET /items/itemId', function() {
 });
 
 describe('DELETE /items/:itemId', function() {
+	request(app)
+		.post('/login/')
+		.send({'username':'Screwee','password':'Password01'})
+		.set('Content-Type', 'application/json')
+		.set('Accept', 'application/json')
+		.end(function(err,res) {
+			cookie = res.headers['set-cookie'];
+		});
 	test('DELETE item/1 returns 204 and deltes item', function(done) {
 		request(app)
 			.delete('/items/1')
@@ -173,6 +180,14 @@ describe('DELETE /items/:itemId', function() {
 });
 
 describe('DELETE /items/', function() {
+	request(app)
+		.post('/login/')
+		.send({'username':'Screwee','password':'Password01'})
+		.set('Content-Type', 'application/json')
+		.set('Accept', 'application/json')
+		.end(function(err,res) {
+			cookie = res.headers['set-cookie'];
+		});
 	test('DELETE item/returns 204 and delte all item', function(done) {
 		request(app)
 			.delete('/items')
