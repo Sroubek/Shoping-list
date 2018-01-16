@@ -1,11 +1,28 @@
 /*global describe*/
 /*global test*/
+/*global beforeAll*/
+/*global afterAll*/
 /*eslint-env node*/
 const app = require('../app.js');
 const request = require('supertest');
+const helpers = require('./test-helpers.js');
+const alasql = require('alasql');
 var cookie;
 
+beforeAll((done) => {
+	helpers.loginUser((authenticatedSession) => {
+		cookie = authenticatedSession;
+		alasql('INSERT INTO items VALUES (\'\',\'1\',\'Cofee\',\'10\',\'ml\')');
+		alasql('INSERT INTO items VALUES (\'\',\'1\',\'Bread\',\'1\',\'Kg\')');
+		alasql('INSERT INTO items VALUES (\'\',\'2\',\'Lichi\',\'80\',\'Kg\')');
+		done();
+	});
+});
+
 describe('POST /items', function() {
+	afterAll(() => {
+		alasql('DELETE FROM items WHERE itemId > 3');
+	});
 	test('POST /items respond with json', function(done) {
 		request(app)
 			.post('/items/')
@@ -50,19 +67,10 @@ describe('POST /items', function() {
 
 
 describe('GET /items', function() {
-	request(app)
-		.post('/login/')
-		.send({'username':'Screwee','password':'Password01'})
-		.set('Content-Type', 'application/json')
-		.set('Accept', 'application/json')
-		.end(function(err,res) {
-			cookie = res.headers['set-cookie'];
-		});
 	test('GET respond with json', function(done) {
-		request(app)
-			.get('/items/')
+		request(app);
+		cookie.get('/items/')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(200, [{
 				itemId: 1,
 				userId: 1,
@@ -82,22 +90,10 @@ describe('GET /items', function() {
 				done();
 			});
 	});
-});
-
-describe('GET /items/itemId', function() {
-	request(app)
-		.post('/login/')
-		.send({'username':'Screwee','password':'Password01'})
-		.set('Content-Type', 'application/json')
-		.set('Accept', 'application/json')
-		.end(function(err,res) {
-			cookie = res.headers['set-cookie'];
-		});
 	test('GET /items/1 call item with id 1', function(done) {
-		request(app)
-			.get('/items/1')
+		request(app);
+		cookie.get('/items/1')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(200, [{
 				itemId: 1,
 				userId: 1,
@@ -112,10 +108,9 @@ describe('GET /items/itemId', function() {
 			});
 	});
 	test('GET item/4 returns 404 item not found', function(done) {
-		request(app)
-			.get('/items/4')
+		request(app);
+		cookie.get('/items/4')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(404, 'item not found')
 			.end(function(err) {
 				if (err) return done(err);
@@ -123,10 +118,9 @@ describe('GET /items/itemId', function() {
 			});
 	});
 	test('GET item/NaN returns 400 Invalid input NaN is not a number!', function(done) {
-		request(app)
-			.get('/items/NaN')
+		request(app);
+		cookie.get('/items/NaN')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(400, 'Invalid input NaN is not a number!')
 			.end(function(err) {
 				if (err) return done(err);
@@ -136,19 +130,10 @@ describe('GET /items/itemId', function() {
 });
 
 describe('DELETE /items/:itemId', function() {
-	request(app)
-		.post('/login/')
-		.send({'username':'Screwee','password':'Password01'})
-		.set('Content-Type', 'application/json')
-		.set('Accept', 'application/json')
-		.end(function(err,res) {
-			cookie = res.headers['set-cookie'];
-		});
 	test('DELETE item/1 returns 204 and deltes item', function(done) {
-		request(app)
-			.delete('/items/1')
+		request(app);
+		cookie.delete('/items/1')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(204)
 			.end(function(err) {
 				if (err) return done(err);
@@ -156,10 +141,9 @@ describe('DELETE /items/:itemId', function() {
 			});
 	});
 	test('DELETE item/4 returns 404 item not found', function(done) {
-		request(app)
-			.delete('/items/4')
+		request(app);
+		cookie.delete('/items/4')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(404, 'item not found')
 			.end(function(err) {
 				if (err) return done(err);
@@ -167,32 +151,19 @@ describe('DELETE /items/:itemId', function() {
 			});
 	});
 	test('DELETE item/NaN returns 400 Invalid input NaN is not a number!', function(done) {
-		request(app)
-			.delete('/items/NaN')
+		request(app);
+		cookie.delete('/items/NaN')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(400, 'Invalid input NaN is not a number!')
 			.end(function(err) {
 				if (err) return done(err);
 				done();
 			});
 	});
-});
-
-describe('DELETE /items/', function() {
-	request(app)
-		.post('/login/')
-		.send({'username':'Screwee','password':'Password01'})
-		.set('Content-Type', 'application/json')
-		.set('Accept', 'application/json')
-		.end(function(err,res) {
-			cookie = res.headers['set-cookie'];
-		});
 	test('DELETE item/returns 204 and delte all item', function(done) {
-		request(app)
-			.delete('/items')
+		request(app);
+		cookie.delete('/items')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(204)
 			.end(function(err) {
 				if (err) return done(err);

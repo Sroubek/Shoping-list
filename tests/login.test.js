@@ -1,41 +1,46 @@
 /*global describe*/
 /*global test*/
+/*global beforeAll*/
 /*eslint-env node*/
 const app = require('../app.js');
 const request = require('supertest');
-var cookie;
+const helpers = require('./test-helpers.js');
+const session = require('supertest-session');
 
 describe('POST /login/', function() {
-	test('POST /login/ respond with json', function(done) {
-		request(app)
-			.post('/login/')
+	var testSession = null;
+	beforeAll(function () {
+		testSession = session(app);
+	});
+	test('POST /login/ return 200', function(done) {
+		request(app);
+		testSession.post('/login/')
 			.send({'username':'Screwee','password':'Password01'})
 			.set('Content-Type', 'application/json')
 			.set('Accept', 'application/json')
 			.expect(200)
 			.expect('Hello user Screwee')
-			.end(function(err,res) {
+			.end(function(err) {
 				if (err) return done(err);
-				cookie = res.headers['set-cookie'];
 				done();
 			});
 	});
 });
 
 describe('GET /profile/', function() {
-	request(app)
-		.post('/login/')
-		.send({'username':'Screwee','password':'Password01'})
-		.set('Content-Type', 'application/json')
-		.set('Accept', 'application/json')
-		.end(function(err,res) {
-			cookie = res.headers['set-cookie'];
+	var cookie;
+
+	beforeAll((done) => {
+		helpers.loginUser((authenticatedSession) => {
+			cookie = authenticatedSession;
+			done();
 		});
+	});
+
 	test('GET /profile/ returns users Information', function(done) {
-		request(app)
-			.get('/profile/')
+		request(app);
+		cookie.get('/profile/')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(200, [{
 				id: 1,
 				username: 'Screwee'
@@ -46,13 +51,10 @@ describe('GET /profile/', function() {
 				done();
 			});
 	});
-});
-describe('GET /logout/', function() {
 	test('GET /logout/ logout user from session', function(done) {
-		request(app)
-			.get('/logout/')
+		request(app);
+		cookie.get('/logout/')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(200, 'User logged out')
 			.end(function(err) {
 				if (err) return done(err);
@@ -63,7 +65,6 @@ describe('GET /logout/', function() {
 		request(app)
 			.get('/profile/')
 			.set('Accept', 'application/json')
-			.set('cookie', cookie)
 			.expect(403, 'You are not logged in')
 			.end(function(err) {
 				if (err) return done(err);
