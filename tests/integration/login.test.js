@@ -2,17 +2,17 @@
 /*global test*/
 /*global beforeAll*/
 /*eslint-env node*/
-const app = require('../app.js');
+const app = require('../../src/app.js');
 const request = require('supertest');
-const helpers = require('./test-helpers.js');
+const helpers = require('../../src/lib/test-helpers.js');
 const session = require('supertest-session');
 
-describe('POST /login/', function() {
+describe('POST /login/', () => {
 	var testSession = null;
-	beforeAll(function () {
+	beforeAll(() => {
 		testSession = session(app);
 	});
-	test('POST /login/ return 200', function(done) {
+	test('POST /login/ return 200',(done) => {
 		request(app);
 		testSession.post('/login/')
 			.send({'username':'Screwee','password':'Password01'})
@@ -20,14 +20,14 @@ describe('POST /login/', function() {
 			.set('Accept', 'application/json')
 			.expect(200)
 			.expect('Hello user Screwee')
-			.end(function(err) {
+			.end((err) => {
 				if (err) return done(err);
 				done();
 			});
 	});
 });
 
-describe('GET /profile/', function() {
+describe('GET /profile/',() => {
 	var cookie;
 
 	beforeAll((done) => {
@@ -37,7 +37,7 @@ describe('GET /profile/', function() {
 		});
 	});
 
-	test('GET /profile/ returns users Information', function(done) {
+	test('GET /profile/ returns users Information',(done) => {
 		request(app);
 		cookie.get('/profile/')
 			.set('Accept', 'application/json')
@@ -46,51 +46,50 @@ describe('GET /profile/', function() {
 				username: 'Screwee'
 			}])
 			.expect('Content-Type',/json/)
-			.end(function(err) {
+			.end((err) => {
 				if (err) return done(err);
 				done();
 			});
 	});
-	test('GET /logout/ logout user from session', function(done) {
+	test('GET /logout/ logout user from session', (done) => {
 		request(app);
 		cookie.get('/logout/')
 			.set('Accept', 'application/json')
 			.expect(200, 'User logged out')
-			.end(function(err) {
+			.end((err) => {
 				if (err) return done(err);
 				done();
 			});
 	});
-	test('GET /profile/ returns that user is not logged in', function(done) {
+	test('GET /profile/ returns that user is not logged in', (done) => {
 		request(app)
 			.get('/profile/')
 			.set('Accept', 'application/json')
 			.expect(403, 'You are not logged in')
-			.end(function(err) {
+			.end((err) => {
 				if (err) return done(err);
 				done();
 			});
 	});
 });
 
-
-describe('User is not logged in', function() {
-	test('GET /items', function(done) {
+describe('User is not logged in',() => {
+	test('GET /items', (done) => {
 		request(app)
 			.get('/items')
 			.set('Accept', 'application/json')
 			.expect(403, 'You are not logged in')
-			.end(function(err) {
+			.end((err) => {
 				if (err) return done(err);
 				done();
 			});
 	});
-	test('DELETE /items/', function(done) {
+	test('DELETE /items/', (done) => {
 		request(app)
 			.delete('/items')
 			.set('Accept', 'application/json')
 			.expect(403, 'You are not logged in')
-			.end(function(err) {
+			.end((err) => {
 				if (err) return done(err);
 				done();
 			});

@@ -1,5 +1,4 @@
 /*eslint-env node*/
-
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -14,8 +13,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
-app.use('/', require('./routes/items.js'));
-app.use('/', require('./routes/profile.js'));
-app.use('/', require('./routes/authentication.js'));
+app.use('/', require('./routes/'));
 
 module.exports = app;

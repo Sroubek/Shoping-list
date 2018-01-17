@@ -2,7 +2,7 @@
 const app = require('../app.js');
 const session = require('supertest-session');
 var authenticatedSession;
-var testSession = null;
+let testSession = null;
 
 module.exports = {
 
