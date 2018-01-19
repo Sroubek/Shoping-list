@@ -1,5 +1,5 @@
 /*eslint-env node*/
-const user = require('./user.js');
+const user = require('./users.js');
 const passport = require('passport');
 const JsonStrategy = require('passport-json').Strategy;
 const bunyan = require('bunyan');
@@ -40,13 +40,6 @@ passport.loginUser = (req, res, next) => {
 			res.status(200).send('Hello user ' + user.username);
 		});
 	})(req, res, next);
-};
-
-passport.logoutUser = (req, res) => {
-	req.logout();
-	req.session.destroy();
-	res.send('User logged out');
-	log.info('User logged out');
 };
 
 module.exports = passport;

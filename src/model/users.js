@@ -30,8 +30,8 @@ user.findByUsername = (username, done) => {
 	});
 };
 
-user.getUserProfile = (req, res) =>{
-	res.status(200).send(alasql('SELECT id, username FROM users WHERE id= ?', req.user.id));
-	log.info(alasql('SELECT id, username FROM users WHERE id= ?', req.user.id));
+user.getUserProfile = (userId) =>{
+	const profile = alasql('SELECT id, username FROM users WHERE id= ?', userId);
+	return profile;
 };
 module.exports = user;

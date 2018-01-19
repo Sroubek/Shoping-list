@@ -6,56 +6,47 @@ const bunyan = require('bunyan');
 const log = bunyan.createLogger({name: 'model-items'});
 
 
-items.getAllItems = (req, res, next) => {
-	const items = alasql('SELECT * FROM items WHERE userId=?', req.user.id);
+items.getAllItems = (userId) => {
+	const items = alasql('SELECT * FROM items WHERE userId=?', userId);
 	log.info(items);
-	res.send(items);
-	log.info(items + 'Items found for user '+ req.user.username);
-	next();
+	return items;
 };
 
-items.getItemById = (req, res, next) => {
-	const userId = alasql('SELECT userId FROM items WHERE itemId='+ req.itemId);
+items.getItemById = (itemId, valUserId) => {
+	const userId = alasql('SELECT userId FROM items WHERE itemId='+ itemId);
 	const id = userId[0];
-	if (id.userId === req.user.id ){
-		const item = alasql('SELECT * FROM items WHERE itemId='+ req.itemId + ' AND userId='+ req.user.id);
-		res.send(item);
-		log.info(item + 'Item found for user '+ req.user.username);
+	let item = null;
+	if (id.userId === valUserId ){
+		item = alasql('SELECT * FROM items WHERE itemId='+ itemId + ' AND userId='+ valUserId);
+		return item;
 	} else{
-		res.status(403).send('That item does not belong to you');
-		log.info('Item doesnt belong to user '+ req.user.username);
-	}	next();
+		return item;
+	}
 };
 
-items.postItem = (item, res, next) => {
-	const newItem = item;
+items.postItem = (item) => {
+	let newItem = item;
 	if (isNaN(newItem.quantity) ){
-		res.status(400).send('Invalid input');
+		let newItem = null;
+		return newItem;
 	}
 	alasql('INSERT INTO items SELECT * FROM ?',[[newItem]]);
-	res.status(201).send(newItem);
 	log.info('Item added into database '+ newItem);
-	next();
+	return newItem;
 };
 
-items.deleteItemById = (req, res, next) => {
-	const userId = alasql('SELECT userId FROM items WHERE itemId='+ req.itemId);
+items.deleteItemById = (itemId, valUserId) => {
+	const userId = alasql('SELECT userId FROM items WHERE itemId='+ itemId);
 	const id = userId[0];
-	if (id.userId === req.user.id ){
-		alasql('DELETE FROM items WHERE itemId='+ req.itemId + ' AND userId='+ req.user.id);
-		log.info('Items deleted by user '+ req.user.username);
-		res.status(204).send();
-	} else{
-		res.status(403).send('That item does not belong to you');
-		log.info('Items deleted by user');
-	}
-	next();
+	let deleted = false;
+	if (id.userId === valUserId){
+		alasql('DELETE FROM items WHERE itemId='+ itemId + ' AND userId='+ userId);
+		deleted = true;
+		return deleted;
+	} return deleted;
 };
 
-items.deleteAllItemsById = (req, res, next) => {
-	alasql('DELETE FROM items WHERE userId=?', req.user.id);
-	res.status(204).send();
-	log.info('Items deleted by user');
-	next();
+items.deleteAllItemsById = (userId) => {
+	alasql('DELETE FROM items WHERE userId=?', userId);
 };
 module.exports = items;
